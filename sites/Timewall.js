@@ -1,4 +1,5 @@
-
+const username = "";
+const password = "";
 
 const puppeteer = require('puppeteer');
 const delay = require('delay');
