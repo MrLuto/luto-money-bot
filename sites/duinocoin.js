@@ -1,11 +1,7 @@
-const username = "pvplogger";
-const threads = "8"; // optional
-const rigname = "moneybot"; // optional
-const miningkey = ""; // optional
-
 const puppeteer = require('puppeteer');
 const delay = require('delay');
 var terminal = require("../terminal.js");
+require('dotenv').config()
 
 var run = async function run(){
     const browser = await puppeteer.launch({headless: true,ignoreHTTPSErrors: true,})
@@ -13,11 +9,11 @@ var run = async function run(){
     await page.goto('https://server.duinocoin.com/webminer.html');
     await delay(500);
     login = await page.$('input#usernameinput.input.is-fullwidth.has-icons');
-    await login.type(username);
+    await login.type(process.env.Duinocoin_username);
     login = await page.$('input#threadsinput.input.is-fullwidth.has-icons');
-    await login.type(threads);
+    await login.type(process.env.Duinocoin_threads);
     login = await page.$('input#riginput.input.is-fullwidth.has-icons');
-    await login.type(rigname);
+    await login.type(process.env.Duinocoin_rigname);
     button = await page.$$('button#minebuttonclass.button.is-fullwidth');
     await button[0].click();
     terminal.log("clear", "Duinocoin");
@@ -30,5 +26,4 @@ var run = async function run(){
         terminal.log("add", "Duinocoin", "Total hashrate: " + data);
     };
 };
-
 module.exports.run = run;

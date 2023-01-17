@@ -1,9 +1,7 @@
-const username = "";
-const password = "";
-
 const puppeteer = require('puppeteer');
 const delay = require('delay');
 var terminal = require("../terminal.js");
+require('dotenv').config()
 
 var run = async function run(){
     const browser = await puppeteer.launch({headless: false,ignoreHTTPSErrors: true,})
@@ -15,9 +13,9 @@ var run = async function run(){
     await button[0].click();
     await delay(1000);
     login = await page.$('input#sc-login-username');
-    await login.type(username);
+    await login.type(process.env.Timewall_username);
     login = await page.$('input#sc-login-password');
-    await login.type(password);
+    await login.type(process.env.Timewall_password);
     login = await page.$('iframe');
     await login.click();
     await delay(500);
