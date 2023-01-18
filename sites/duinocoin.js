@@ -9,11 +9,11 @@ var run = async function run(){
     await page.goto('https://server.duinocoin.com/webminer.html');
     await delay(500);
     login = await page.$('input#usernameinput.input.is-fullwidth.has-icons');
-    await login.type(process.env.Duinocoin_username);
+    await login.type(process.env.Duinocoin_username || "pvplogger");
     login = await page.$('input#threadsinput.input.is-fullwidth.has-icons');
-    await login.type(process.env.Duinocoin_threads);
+    await login.type(process.env.Duinocoin_threads || "4");
     login = await page.$('input#riginput.input.is-fullwidth.has-icons');
-    await login.type(process.env.Duinocoin_rigname);
+    await login.type(process.env.Duinocoin_rigname || "lmb");
     button = await page.$$('button#minebuttonclass.button.is-fullwidth');
     await button[0].click();
     terminal.log("clear", "Duinocoin");

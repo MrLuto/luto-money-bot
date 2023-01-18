@@ -4,7 +4,7 @@ var terminal = require("../terminal.js");
 require('dotenv').config()
 
 var run = async function run(){
-    const browser = await puppeteer.launch({headless: false,ignoreHTTPSErrors: true,})
+    const browser = await puppeteer.launch({headless: false,ignoreHTTPSErrors: true,defaultViewport: null,})
     let page2 = await browser.newPage();
     let page = await browser.newPage();
     await page.goto('https://timewall.io/users/login');
@@ -13,7 +13,7 @@ var run = async function run(){
     await button[0].click();
     await delay(1000);
     login = await page.$('input#sc-login-username');
-    await login.type(process.env.Timewall_username);
+    await login.type(process.env.Timewall_username || "configure your .env file");
     login = await page.$('input#sc-login-password');
     await login.type(process.env.Timewall_password);
     login = await page.$('iframe');
