@@ -77,7 +77,7 @@ var run = async function run(){
             await button.click();
             await page2.bringToFront();
             if (tijd > 1000){
-            await delay(tijd);
+                await delay(tijd);
             };
             await delay(1000);
             await page.bringToFront();
