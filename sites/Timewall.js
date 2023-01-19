@@ -96,5 +96,4 @@ var run = async function run(){
         noAdsAvailible = await page.$eval('div.uk-alert-danger.uk-alert.clicksNotAvailable', el => getComputedStyle(el).getPropertyValue('display'));
     }
 };
-run();
 module.exports.run = run;
