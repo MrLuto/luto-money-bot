@@ -16,11 +16,13 @@ var run = async function run(){
     await login.type(process.env.Timewall_username || "configure your .env file");
     login = await page.$('input#sc-login-password');
     await login.type(process.env.Timewall_password);
-    login = await page.$('iframe');
-    await login.click();
-    await delay(500);
-    login = await page.$('button.btnLogin.sc-button.sc-button-large.sc-button-block.sc-button-danger');
-    await login.click();
+    if (process.env.Try_Captcha.toLowerCase() == 'true'){
+        login = await page.$('iframe');
+        await login.click();
+        await delay(500);
+        login = await page.$('button.btnLogin.sc-button.sc-button-large.sc-button-block.sc-button-danger');
+        await login.click();
+    }
     terminal.log("clear", "Timewall");
     terminal.log("add", "Timewall", 'log in');
     while (page.url() != 'https://timewall.io/surveys'){

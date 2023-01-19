@@ -1,25 +1,31 @@
 const messages = [];
+require('dotenv').config();
 
 var log = function log(functionName, id, message){
     if (functionName == "log"){
-        console.clear();
-        console.log('LUTO Money bot');
-        console.log('-----------------');
-        messages.forEach(element => { console.log(element) });
-
+        if(process.env.Log_to_console.toLowerCase() == 'true'){
+            console.clear();
+            console.log('LUTO Money bot');
+            console.log('-----------------');
+            messages.forEach(element => { console.log(element) });
+        }
     } else if (functionName == "add"){
-        messages.push(id + ": " + message);
-        messages.sort();
+        if(process.env.Log_to_console.toLowerCase() == 'true'){
+            messages.push(id + ": " + message);
+            messages.sort();
+        }
     } else if (functionName == "clear"){
-        messages.forEach(element => { 
-            if (element.includes(id)){
-                messages.splice(messages.indexOf(element), 1);
-            } 
-        
-        });
+        if(process.env.Log_to_console.toLowerCase() == 'true'){
+            messages.forEach(element => { 
+                if (element.includes(id)){
+                    messages.splice(messages.indexOf(element), 1);
+                } 
+            
+            });
+        }
     } else {
         console.error("error");
-    }
+    };
 
 };
 

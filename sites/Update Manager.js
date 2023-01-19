@@ -5,7 +5,7 @@ const shell = require('shelljs');
 var run = async function run(){
     terminal.log("clear", "Update Manager");
     terminal.log("add", "Update Manager", 'Checking for updates');
-    shell.exec('git checkout .');
+    //shell.exec('git checkout .');
     await delay(500);
     terminal.log("clear", "Update Manager");
     terminal.log("add", "Update Manager", 'Running updates');
