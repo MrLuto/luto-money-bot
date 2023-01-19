@@ -1,7 +1,7 @@
 const puppeteer = require('puppeteer');
 const delay = require('delay');
 var terminal = require("../terminal.js");
-require('dotenv').config()
+require('dotenv').config({path: './../.env'});
 
 var run = async function run(){
     const browser = await puppeteer.launch({headless: false,ignoreHTTPSErrors: true,defaultViewport: null,})
@@ -13,7 +13,7 @@ var run = async function run(){
     await button[0].click();
     await delay(1000);
     login = await page.$('input#sc-login-username');
-    await login.type(process.env.Timewall_username || "configure your .env file");
+    await login.type(process.env.Timewall_username);
     login = await page.$('input#sc-login-password');
     await login.type(process.env.Timewall_password);
     if (process.env.Try_Captcha.toLowerCase() == 'true'){
@@ -33,8 +33,6 @@ var run = async function run(){
     await page.goto('https://timewall.io/clicks');
     await delay(500);
     // check if there are any ads
-    noAdsAvailible = await page.$eval('div.uk-alert-danger.uk-alert.clicksNotAvailable', el => getComputedStyle(el).getPropertyValue('display'));
-    capcha = await page.$eval('div.uk-alert-danger.uk-alert.clicksNotAvailable', el => getComputedStyle(el).getPropertyValue('display'));
     AOA = 0;
     NoAdsOpened = 0;
     await delay(5000);
@@ -42,7 +40,7 @@ var run = async function run(){
     startpunten = await startpunten.evaluate( node => node.innerText);
     while (true){
         terminal.log("clear", "Timewall");
-        if (noAdsAvailible == 'block' || capcha == 'block'){
+        if (await page.$eval('div.uk-alert-danger.uk-alert.clicksNotAvailable', el => getComputedStyle(el).getPropertyValue('display')) == 'block'){
             NoAdsOpened = NoAdsOpened + 1;
             await delay(5000);
             TOTpunten = await page.$('span.walletPoints');
@@ -54,6 +52,13 @@ var run = async function run(){
             terminal.log("add", "Timewall", "Total amount of ads opened: " + AOA);
             await delay(60000);
             await page.reload();
+            await delay(500);
+        } else if (await page.$eval('iframe', el => getComputedStyle(el).getPropertyValue('display')) == 'inline'){
+            terminal.log("clear", "Timewall");
+            terminal.log("add", "Timewall", 'Ad Status: capcha');
+            terminal.log("add", "Timewall", "Minutes since last ad: " + NoAdsOpened + " minutes");
+            terminal.log("add", "Timewall", "total amount of points: " + TOTpunten + "   total amount of cents: " + TOTpunten / 236);
+            terminal.log("add", "Timewall", "Total amount of ads opened: " + AOA);
             await delay(500);
         } else {
             AOA++;
@@ -91,5 +96,5 @@ var run = async function run(){
         noAdsAvailible = await page.$eval('div.uk-alert-danger.uk-alert.clicksNotAvailable', el => getComputedStyle(el).getPropertyValue('display'));
     }
 };
-
+run();
 module.exports.run = run;
