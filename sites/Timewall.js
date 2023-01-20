@@ -86,8 +86,9 @@ var run = async function run(){
             await delay(2000);
             pagetitle = parseInt(await page.title());
             console.log(pagetitle);
+            await delay(tijd);
             if (pagetitle == NaN){
-                await delay(tijd);
+                
             };
             await page.bringToFront();
             await delay(500);
