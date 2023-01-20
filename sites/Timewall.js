@@ -83,10 +83,12 @@ var run = async function run(){
             button = await page.$('a[class="clickBtn sc-button sc-button-primary"]');
             await button.click();
             await page2.bringToFront();
-            if (tijd > 1000){
+            await delay(2000);
+            pagetitle = parseInt(await page.title());
+            console.log(pagetitle);
+            if (pagetitle == NaN){
                 await delay(tijd);
             };
-            await delay(1000);
             await page.bringToFront();
             await delay(500);
             await page.reload();
