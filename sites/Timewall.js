@@ -73,6 +73,7 @@ var run = async function run(){
             await delay(1000);
             TOTpunten = await page.$('span.walletPoints');
             TOTpunten = await TOTpunten.evaluate( node => node.innerText);
+            TOTpunten = parseInt(TOTpunten);
             terminal.log("clear", "Timewall");
             terminal.log("add", "Timewall", 'Ad Status: ads availible');
             terminal.log("add", "Timewall", "Waiting for " + tijd + " seconds for the current task to be completed");
