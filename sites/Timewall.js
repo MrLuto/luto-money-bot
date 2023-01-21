@@ -59,6 +59,8 @@ var run = async function run(){
             terminal.log("add", "Timewall", "Minutes since last ad: " + NoAdsOpened + " minutes");
             terminal.log("add", "Timewall", "total amount of points: " + TOTpunten + "   total amount of cents: " + TOTpunten / 236);
             terminal.log("add", "Timewall", "Total amount of ads opened: " + AOA);
+            login = await page.$('iframe');
+            await login.click();
             await delay(500);
         } else {
             AOA++;
@@ -84,12 +86,9 @@ var run = async function run(){
             button = await page.$('a[class="clickBtn sc-button sc-button-primary"]');
             await button.click();
             await page2.bringToFront();
-            await delay(2000);
-            pagetitle = parseInt(await page.title());
-            console.log(pagetitle);
-            await delay(tijd);
-            if (pagetitle == NaN){
-                
+            await delay(4000);
+            if (parseInt(await page.title()) !== NaN){
+                await delay(tijd);
             };
             await page.bringToFront();
             await delay(500);
