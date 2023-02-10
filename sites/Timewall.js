@@ -40,63 +40,99 @@ var run = async function run(){
     startpunten = await startpunten.evaluate( node => node.innerText);
     while (true){
         terminal.log("clear", "Timewall");
-        if (await page.$eval('div.uk-alert-danger.uk-alert.clicksNotAvailable', el => getComputedStyle(el).getPropertyValue('display')) == 'block'){
-            NoAdsOpened = NoAdsOpened + 1;
-            await delay(5000);
-            TOTpunten = await page.$('span.walletPoints');
-            TOTpunten = await TOTpunten.evaluate( node => node.innerText);
-            terminal.log("clear", "Timewall");
-            terminal.log("add", "Timewall", 'Ad Status: NO ads availible');
-            terminal.log("add", "Timewall", "Minutes since last ad: " + NoAdsOpened + " minutes");
-            terminal.log("add", "Timewall", "total amount of points: " + TOTpunten + "   total amount of cents: " + TOTpunten / 236);
-            terminal.log("add", "Timewall", "Total amount of ads opened: " + AOA);
-            await delay(60000);
-            await page.reload();
-            await delay(500);
+        if (process.env.Auto_Whithdraw == 'true' && startpunten >= process.env.Whithdraw_amount){
+            try {
+                console.log("test");
+                terminal.log("clear", "Timewall");
+                terminal.log("add", "Timewall", 'Whithdrawing ' + process.env.Whithdraw_amount + ' points');
+                await page.goto('https://timewall.io/withdraw');
+                await delay(500);
+                Withdraw = await page.$('a.sc-button.withdrawbtn.sc-button-primary');
+                await Withdraw.click();
+                page.on('dialog', async dialog => {   //on event listener trigger
+                    console.log(dialog.message());  //get alert message
+                    await dialog.accept();        //accept alert
+                })
+                await delay(1000);
+                await page.goto('https://timewall.io/clicks');
+                await delay(500);
+            } catch (error) {
+                console.error(error);
+                console.log("Error While Whithdrawing");
+            }
+        } else if (await page.$eval('div.uk-alert-danger.uk-alert.clicksNotAvailable', el => getComputedStyle(el).getPropertyValue('display')) == 'block'){
+            try {
+                NoAdsOpened = NoAdsOpened + 1;
+                await delay(5000);
+                TOTpunten = await page.$('span.walletPoints');
+                TOTpunten = await TOTpunten.evaluate( node => node.innerText);
+                terminal.log("clear", "Timewall");
+                terminal.log("add", "Timewall", 'Ad Status: NO ads availible');
+                terminal.log("add", "Timewall", "Minutes since last ad: " + NoAdsOpened + " minutes");
+                terminal.log("add", "Timewall", "total amount of points: " + TOTpunten + "   total amount of cents: " + TOTpunten / 236);
+                terminal.log("add", "Timewall", "Total amount of ads opened: " + AOA);
+                await delay(60000);
+                await page.reload();
+                await delay(500);
+            } catch (error) {
+                console.error(error);
+                console.log("Error While NO ads availible");
+            }
         } else if (await page.$eval('iframe', el => getComputedStyle(el).getPropertyValue('display')) == 'inline'){
-            terminal.log("clear", "Timewall");
-            terminal.log("add", "Timewall", 'Ad Status: capcha');
-            terminal.log("add", "Timewall", "Minutes since last ad: " + NoAdsOpened + " minutes");
-            terminal.log("add", "Timewall", "total amount of points: " + TOTpunten + "   total amount of cents: " + TOTpunten / 236);
-            terminal.log("add", "Timewall", "Total amount of ads opened: " + AOA);
-            login = await page.$('iframe');
-            await login.click();
-            await delay(500);
+            try {
+                terminal.log("clear", "Timewall");
+                terminal.log("add", "Timewall", 'Ad Status: capcha');
+                terminal.log("add", "Timewall", "Minutes since last ad: " + NoAdsOpened + " minutes");
+                terminal.log("add", "Timewall", "total amount of points: " + TOTpunten + "   total amount of cents: " + TOTpunten / 236);
+                terminal.log("add", "Timewall", "Total amount of ads opened: " + AOA);
+                login = await page.$('iframe');
+                await login.click();
+                await delay(500);
+            } catch (error) {
+                console.error(error);
+                console.log("Error While Capcha");
+            }
         } else {
-            AOA++;
-            NoAdsOpened = 0;
-            await delay(5000);
-            tijd = await page.$('span.clickTimer');
-            tijd = await tijd.evaluate( node => node.innerText);
-            punten = await page.$('p.uk-margin-remove.clickRate');
-            punten = await punten.evaluate( node => node.innerText);
-            punten = punten.replace(' points', '');
-            punten = parseInt(punten);
-            await delay(1000);
-            TOTpunten = await page.$('span.walletPoints');
-            TOTpunten = await TOTpunten.evaluate( node => node.innerText);
-            TOTpunten = parseInt(TOTpunten);
-            terminal.log("clear", "Timewall");
-            terminal.log("add", "Timewall", 'Ad Status: ads availible');
-            terminal.log("add", "Timewall", "Waiting for " + tijd + " seconds for the current task to be completed");
-            terminal.log("add", "Timewall", "You will get " + punten + " points for this task");
-            terminal.log("add", "Timewall", "total amount of points: " + TOTpunten + "   total amount of cents: " + TOTpunten / 236);
-            terminal.log("add", "Timewall", "Total amount of ads opened: " + AOA);
-            tijd = tijd * 1000;
-            button = await page.$('a[class="clickBtn sc-button sc-button-primary"]');
-            await button.click();
-            await page2.bringToFront();
-            await delay(4000);
-            if (parseInt(await page.title()) !== NaN){
-                await delay(tijd);
-            };
-            await page.bringToFront();
-            await delay(500);
-            await page.reload();
-            await delay(500);
+            try {
+                AOA++;
+                NoAdsOpened = 0;
+                await delay(5000);
+                tijd = await page.$('span.clickTimer');
+                tijd = await tijd.evaluate( node => node.innerText);
+                punten = await page.$('p.uk-margin-remove.clickRate');
+                punten = await punten.evaluate( node => node.innerText);
+                punten = punten.replace(' points', '');
+                punten = parseInt(punten);
+                await delay(1000);
+                TOTpunten = await page.$('span.walletPoints');
+                TOTpunten = await TOTpunten.evaluate( node => node.innerText);
+                TOTpunten = parseInt(TOTpunten);
+                terminal.log("clear", "Timewall");
+                terminal.log("add", "Timewall", 'Ad Status: ads availible');
+                terminal.log("add", "Timewall", "Waiting for " + tijd + " seconds for the current task to be completed");
+                terminal.log("add", "Timewall", "You will get " + punten + " points for this task");
+                terminal.log("add", "Timewall", "total amount of points: " + TOTpunten + "   total amount of cents: " + TOTpunten / 236);
+                terminal.log("add", "Timewall", "Total amount of ads opened: " + AOA);
+                tijd = tijd * 1000;
+                button = await page.$('a[class="clickBtn sc-button sc-button-primary"]');
+                await button.click();
+                await page2.bringToFront();
+                await delay(4000);
+                if (parseInt(await page.title()) !== NaN){
+                    await delay(tijd);
+                };
+                await page.bringToFront();
+                await delay(500);
+                await page.reload();
+                await delay(500);
+            } catch (error) {
+                console.error(error);
+                console.log("Error While Running");
+            }
             
         }
         noAdsAvailible = await page.$eval('div.uk-alert-danger.uk-alert.clicksNotAvailable', el => getComputedStyle(el).getPropertyValue('display'));
     }
 };
+run();
 module.exports.run = run;
