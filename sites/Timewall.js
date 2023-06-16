@@ -78,20 +78,6 @@ var run = async function run(){
                 console.error(error);
                 console.log("Error While NO ads availible");
             }
-        } else if (await page.$eval('iframe', el => getComputedStyle(el).getPropertyValue('display')) == 'inline'){
-            try {
-                terminal.log("clear", "Timewall");
-                terminal.log("add", "Timewall", 'Ad Status: capcha');
-                terminal.log("add", "Timewall", "Minutes since last ad: " + NoAdsOpened + " minutes");
-                terminal.log("add", "Timewall", "total amount of points: " + TOTpunten + "   total amount of cents: " + TOTpunten / 236);
-                terminal.log("add", "Timewall", "Total amount of ads opened: " + AOA);
-                login = await page.$('iframe');
-                await login.click();
-                await delay(500);
-            } catch (error) {
-                console.error(error);
-                console.log("Error While Capcha");
-            }
         } else {
             try {
                 AOA++;
@@ -132,6 +118,15 @@ var run = async function run(){
             
         }
         noAdsAvailible = await page.$eval('div.uk-alert-danger.uk-alert.clicksNotAvailable', el => getComputedStyle(el).getPropertyValue('display'));
+        const pages = await browser.pages();
+        const numTabs = pages.length;
+        if (numTabs > 4) {
+          console.log('Closing extra tabs...');
+          const tabsToClose = numTabs - 4;
+          for (let i = numTabs - 1; i >= 4; i--) {
+            await pages[i].close();
+          }
+        }
     }
 };
 run();
